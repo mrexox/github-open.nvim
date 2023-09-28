@@ -38,11 +38,21 @@ local function meta()
   }
 end
 
+local function opener()
+  if vim.fn.has('macunix') then
+    return 'open'
+  elseif vim.fn.has('unix') then
+    return 'xdg-open'
+  else
+    return 'start'
+  end
+end
+
 function M.open_file()
   local info = meta()
   local url = info.repo .. '/tree/' .. info.branch .. '/' .. info.path
   vim.print("Opening " .. url)
-  vim.fn.system({ 'open', url })
+  vim.fn.system({ opener() , url })
 end
 
 function M.open_line()
@@ -50,7 +60,7 @@ function M.open_line()
   local info = meta()
   local url = info.repo .. '/tree/' .. info.branch .. '/' .. info.path .. '#L' .. line
   vim.print("Opening " .. url)
-  vim.fn.system({ 'open', url })
+  vim.fn.system({ opener() , url })
 end
 
 return M
