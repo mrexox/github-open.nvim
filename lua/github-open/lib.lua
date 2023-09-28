@@ -26,7 +26,7 @@ local function meta()
   local full_path = vim.fn.expand('%:p')
   local git_root = vim.fn.trim(vim.fn.system({ 'git', 'rev-parse', '--show-toplevel' }))
   local branch = vim.fn.trim(vim.fn.system({ 'git', 'rev-parse', '--abbrev-ref', 'HEAD' }))
-  local path = string.gsub(full_path, git_root, '')
+  local path = string.sub(full_path, git_root:len()+1)
   local repo = get_repo()
 
   return {
