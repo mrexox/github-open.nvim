@@ -33,7 +33,7 @@ local function meta()
     full_path = full_path,
     git_root = git_root,
     branch = branch,
-    path = path,
+    path = path:gsub('^/', ''),
     repo = repo,
   }
 end
@@ -50,7 +50,7 @@ end
 
 function M.open_file()
   local info = meta()
-  local url = info.repo .. '/tree/' .. info.branch .. '/' .. info.path
+  local url = info.repo .. '/blob/' .. info.branch .. '/' .. info.path
   vim.print("Opening " .. url)
   vim.fn.system({ opener() , url })
 end
