@@ -22,7 +22,7 @@ vim.keymap.set('n', '<Leader>gl', require('github-open').open_line, opts)
 
 Or to `~/.config/nvim/init.vim`
 
-```vimscript
+```vim
 silent! nnoremap <leader>gh :GithubOpenFile<cr>
 silent! nnoremap <leader>gl :GithubOpenLine<cr>
 ```
