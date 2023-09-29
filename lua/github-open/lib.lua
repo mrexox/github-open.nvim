@@ -1,6 +1,6 @@
 local M = {}
 
-local function get_repo()
+local function remote()
   local remotes = vim.fn.trim(vim.fn.system({'git', 'remote', '-v'}))
   local remote
   for r in remotes:gmatch("[^\r\n]+") do
@@ -10,12 +10,10 @@ local function get_repo()
       break
     end
   end
-  remote = remote:gsub('origin%s+', '')
-  remote = remote:gsub('%s+.fetch.', '')
+
+  remote = remote:gsub('origin%s+', ''):gsub('%s+.fetch.', '')
   if remote:match('^git@') then
-    remote = remote:gsub('^git@', '')
-    remote = remote:gsub(':', '/')
-    remote = "https://" .. remote
+    remote = "https://" .. remote:gsub('^git@', ''):gsub(':', '/')
   end
   remote = remote:gsub('.git$', '')
 
@@ -27,14 +25,13 @@ local function meta()
   local git_root = vim.fn.trim(vim.fn.system({ 'git', 'rev-parse', '--show-toplevel' }))
   local branch = vim.fn.trim(vim.fn.system({ 'git', 'rev-parse', '--abbrev-ref', 'HEAD' }))
   local path = string.sub(full_path, git_root:len()+1)
-  local repo = get_repo()
 
   return {
     full_path = full_path,
     git_root = git_root,
     branch = branch,
     path = path:gsub('^/', ''),
-    repo = repo,
+    repo = remote(),
   }
 end
 
@@ -49,17 +46,21 @@ local function opener()
 end
 
 function M.open_file()
-  local info = meta()
-  local url = info.repo .. '/blob/' .. info.branch .. '/' .. info.path
+  local meta = meta()
+  local url = meta.repo .. '/blob/' .. meta.branch .. '/' .. meta.path
+
   vim.print("Opening " .. url)
+
   vim.fn.system({ opener() , url })
 end
 
 function M.open_line()
   local line = vim.api.nvim_win_get_cursor(0)[1]
-  local info = meta()
-  local url = info.repo .. '/tree/' .. info.branch .. '/' .. info.path .. '#L' .. line
+  local meta = meta()
+  local url = meta.repo .. '/blob/' .. meta.branch .. '/' .. meta.path .. '#L' .. line
+
   vim.print("Opening " .. url)
+
   vim.fn.system({ opener() , url })
 end
 
