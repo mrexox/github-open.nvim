@@ -1,6 +1,7 @@
 local M = {}
 
-local function remote()
+-- Returns the URL of the (fetch) remote
+local function repo_url()
   local remotes = vim.fn.trim(vim.fn.system({'git', 'remote', '-v'}))
   local remote
   for r in remotes:gmatch("[^\r\n]+") do
@@ -11,30 +12,32 @@ local function remote()
     end
   end
 
-  remote = remote:gsub('origin%s+', ''):gsub('%s+.fetch.', '')
+  remote = remote:gsub('origin%s+', ''):gsub('%s+.fetch.', ''):gsub('.git$', '')
   if remote:match('^git@') then
     remote = "https://" .. remote:gsub('^git@', ''):gsub(':', '/')
   end
-  remote = remote:gsub('.git$', '')
 
   return remote
 end
 
+-- Information about the project of the file.
+-- Assumes that the PWD is in the git project.
 local function meta()
   local full_path = vim.fn.expand('%:p')
   local git_root = vim.fn.trim(vim.fn.system({ 'git', 'rev-parse', '--show-toplevel' }))
   local branch = vim.fn.trim(vim.fn.system({ 'git', 'rev-parse', '--abbrev-ref', 'HEAD' }))
-  local path = string.sub(full_path, git_root:len()+1)
+  local path = string.sub(full_path, #git_root+1)
 
   return {
     full_path = full_path,
     git_root = git_root,
     branch = branch,
     path = path:gsub('^/', ''),
-    repo = remote(),
+    repo = repo_url(),
   }
 end
 
+-- Returns default opener for the OS
 local function opener()
   if vim.fn.has('macunix') then
     return 'open'
