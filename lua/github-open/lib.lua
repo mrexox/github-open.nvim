@@ -39,9 +39,9 @@ end
 
 -- Returns default opener for the OS
 local function opener()
-  if vim.fn.has('macunix') then
+  if vim.fn.has('macunix') == 1 then
     return 'open'
-  elseif vim.fn.has('unix') then
+  elseif vim.fn.has('unix') == 1 then
     return 'xdg-open'
   else
     return 'start'
