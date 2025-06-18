@@ -10,14 +10,25 @@ With `Plug`
 Plug 'mrexox/github-open.nvim'
 ```
 
+With `lazy.nvim`
+
+```lua
+{
+  "mrexox/github-open.nvim",
+  keys = {
+    { "<leader>gh", function() require('github-open').open_file() end, },
+    { "<leader>gl", function() require('github-open').open_line() end, },
+  },
+},
+```
+
 ## Usage
 
 Add keybindings to `~/.config/nvim/init.lua`
 
 ```lua
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<Leader>gh', require('github-open').open_file, opts)
-vim.keymap.set('n', '<Leader>gl', require('github-open').open_line, opts)
+vim.keymap.set('n', '<Leader>gh', require('github-open').open_file, noremap = true, silent = true)
+vim.keymap.set('n', '<Leader>gl', require('github-open').open_line, noremap = true, silent = true)
 ```
 
 Or to `~/.config/nvim/init.vim`
