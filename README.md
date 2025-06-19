@@ -31,10 +31,10 @@ If you're not using lazy.nvim, you can configure the keymaps manually.
 Add keybindings to `~/.config/nvim/init.lua`
 
 ```lua
-vim.keymap.set('n', '<leader>gh', require('github-open').open_file, noremap = true, silent = true)
-vim.keymap.set('n', '<leader>gl', require('github-open').open_line, noremap = true, silent = true)
-vim.keymap.set('n', '<leader>gb', require('github-open').open_blame_line, noremap = true, silent = true)
-vim.keymap.set('n', '<leader>gc', require('github-open').open_commit, noremap = true, silent = true)
+vim.keymap.set('n', '<leader>gh', require('github-open').open_file, { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gl', require('github-open').open_line, { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gb', require('github-open').open_blame_line, { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gc', require('github-open').open_commit, { noremap = true, silent = true })
 ```
 
 Or to `~/.config/nvim/init.vim`
@@ -50,7 +50,9 @@ silent! nnoremap <leader>gc :GithubOpenCommit<cr>
 
 Here's the description of functions provided by this plugin.
 
-`open_file` – opens the file on Github
-`open_line` – opens the file on Github, highlighting the line your cursor is on
-`open_blame_line` – opens the file on the Github, in a blame mode
-`open_commit` – opens the commit which was last to edit the line under your cursor
+|Function|Description|
+|--------|-----------|
+|`open_file`| Opens the file on Github |
+|`open_line`| Opens the file on Github, highlighting the line your cursor is on |
+|`open_blame_line`| Opens the file on the Github, in a blame mode |
+|`open_commit`| Opens the commit which was last to edit the line under your cursor |
