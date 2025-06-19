@@ -20,6 +20,18 @@ local function repo_url()
   return remote
 end
 
+-- Splits the string and returns an array
+local function split(input, delimiter)
+  if delimiter == nil then
+    delimiter = "%s"  -- Default to whitespace
+  end
+  local result = {}
+  for match in (input .. delimiter):gmatch("(.-)" .. delimiter) do
+    table.insert(result, match)
+  end
+  return result
+end
+
 -- Information about the project of the file.
 -- Assumes that the PWD is in the git project.
 local function meta()
@@ -53,7 +65,6 @@ function M.open_file()
   local url = meta.repo .. '/blob/' .. meta.branch .. '/' .. meta.path
 
   vim.print("Opening " .. url)
-
   vim.fn.system({ opener() , url })
 end
 
@@ -63,7 +74,32 @@ function M.open_line()
   local url = meta.repo .. '/blob/' .. meta.branch .. '/' .. meta.path .. '#L' .. line
 
   vim.print("Opening " .. url)
+  vim.fn.system({ opener() , url })
+end
 
+function M.open_blame_line()
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+  local meta = meta()
+  local url = meta.repo .. '/blame/' .. meta.branch .. '/' .. meta.path .. '#L' .. line
+
+  vim.print("Opening " .. url)
+  vim.fn.system({ opener() , url })
+end
+
+function M.open_commit()
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+  local meta = meta()
+  local blame = vim.fn.trim(vim.fn.system({ 'git', 'blame', '-L', line .. ',' .. line, meta.full_path }))
+  local commit = split(blame)[1]
+  commit = commit:gsub("[^%w]+", "")
+  local url = meta.repo .. '/commit/' .. commit
+
+  if commit == "00000000" then
+    vim.print("Line #" .. line .. " is not committed yet")
+    return
+  end
+
+  vim.print("Opening " .. url)
   vim.fn.system({ opener() , url })
 end
 

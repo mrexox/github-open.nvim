@@ -15,3 +15,5 @@ exe "lua package.path = package.path .. ';" . s:lua_rocks_deps_loc . "/lua-?/ini
 
 command! -nargs=0 GithubOpenFile lua require("github-open").open_file()
 command! -nargs=0 GithubOpenLine lua require("github-open").open_line()
+command! -nargs=0 GithubOpenBlameLine lua require("github-open").open_blame_line()
+command! -nargs=0 GithubOpenCommit lua require("github-open").open_commit()
